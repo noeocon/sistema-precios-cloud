@@ -22,6 +22,7 @@ function App() {
           setListaVentaRoja(data.venta || []);
           setListaCompraVerde(data.compra || []);
           setListaCompraVerde(data.compra || []);
+          setUltimaActualizacion(data.ultimaActualizacion || '');
         }
       } catch (error) {
         console.error("Error al cargar de Firebase:", error);
