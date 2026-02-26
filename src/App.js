@@ -9,6 +9,7 @@ function App() {
   const [busqueda, setBusqueda] = useState('');
   const [resultado, setResultado] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [ultimaActualizacion, setUltimaActualizacion] = useState('');
 
   // --- 1. CARGA AUTOMÁTICA DESDE FIREBASE ---
   useEffect(() => {
@@ -19,6 +20,7 @@ function App() {
         if (docSnap.exists()) {
           const data = docSnap.data();
           setListaVentaRoja(data.venta || []);
+          setListaCompraVerde(data.compra || []);
           setListaCompraVerde(data.compra || []);
         }
       } catch (error) {
@@ -122,9 +124,16 @@ setResultado({
   };
 
   return (
-    <div style={styles.container}>
+      <div style={styles.container}>
       <h1 style={styles.title}>🚀 Sistema de Precios Cloud</h1>
       
+      {/* --- NUEVO: Indicador de fecha de actualización --- */}
+      {ultimaActualizacion && (
+        <div style={styles.updateBadge}>
+          📅 Última actualización: <strong>{ultimaActualizacion}</strong>
+        </div>
+      )}
+
       <div style={styles.row}>
         <div style={{ ...styles.card, background: '#ffebee', borderColor: '#ef5350' }}>
           <strong>🔴 Lista Roja (VENTA)</strong>
@@ -204,6 +213,20 @@ const styles = {
     fontSize: '0.85rem',
     fontWeight: 'bold',
     border: '1px solid #b3e5fc'
+  },
+  // --- ESTE ES EL NUEVO ESTILO ---
+  updateBadge: {
+    textAlign: 'center',
+    marginBottom: '20px',
+    fontSize: '0.85rem',
+    color: '#546e7a',
+    backgroundColor: '#eceff1',
+    display: 'block',
+    margin: '0 auto 20px auto',
+    padding: '6px 15px',
+    borderRadius: '20px',
+    width: 'fit-content',
+    border: '1px solid #cfd8dc'
   }
 };
 
