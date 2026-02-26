@@ -55,8 +55,19 @@ const extraerDatos = (fila) => {
     return { descripcion, precio: precioLimpio, unidad };
   };
 
-  const manejarArchivo = (e, tipo) => {
+const manejarArchivo = (e, tipo) => {
     const file = e.target.files[0];
+    if (!file) return;
+
+    // --- BLOQUE DE VALIDACIÓN PARA PDF ---
+    const nombreArchivo = file.name.toLowerCase();
+    if (nombreArchivo.endsWith('.pdf')) {
+      alert("⚠️ Error: No puedes subir archivos PDF. Por favor, usa el archivo Excel original.");
+      e.target.value = ""; // Esto limpia el selector de archivos
+      return; // Detiene la ejecución aquí mismo
+    }
+    // ---------------------------------------
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const bstr = event.target.result;
@@ -124,11 +135,11 @@ setResultado({
     }
   };
 
-  return (
-      <div style={styles.container}>
+return (
+    <div style={styles.container}>
       <h1 style={styles.title}>🚀 Sistema de Precios Cloud</h1>
       
-      {/* --- NUEVO: Indicador de fecha de actualización --- */}
+      {/* --- Indicador de fecha de actualización --- */}
       {ultimaActualizacion && (
         <div style={styles.updateBadge}>
           📅 Última actualización: <strong>{ultimaActualizacion}</strong>
@@ -138,11 +149,23 @@ setResultado({
       <div style={styles.row}>
         <div style={{ ...styles.card, background: '#ffebee', borderColor: '#ef5350' }}>
           <strong>🔴 Lista Roja (VENTA)</strong>
-          <input type="file" onChange={(e) => manejarArchivo(e, 'roja')} style={styles.fileInput} />
+          {/* CAMBIO AQUÍ: Se añade 'accept' */}
+          <input 
+            type="file" 
+            accept=".xlsx, .xls" 
+            onChange={(e) => manejarArchivo(e, 'roja')} 
+            style={styles.fileInput} 
+          />
         </div>
         <div style={{ ...styles.card, background: '#e8f5e9', borderColor: '#66bb6a' }}>
           <strong>🟢 Lista Verde (COMPRA)</strong>
-          <input type="file" onChange={(e) => manejarArchivo(e, 'verde')} style={styles.fileInput} />
+          {/* CAMBIO AQUÍ: Se añade 'accept' */}
+          <input 
+            type="file" 
+            accept=".xlsx, .xls" 
+            onChange={(e) => manejarArchivo(e, 'verde')} 
+            style={styles.fileInput} 
+          />
         </div>
       </div>
 
@@ -152,6 +175,7 @@ setResultado({
         </button>
       </div>
 
+      {/* ... El resto del código (buscador y resultados) queda exactamente igual ... */}
       <div style={styles.searchContainer}>
         <input 
           type="text" 
